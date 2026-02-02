@@ -27,10 +27,3 @@ Thumbs.db
 # Cursor / local tooling
 .cursor/
 terminals/
-
-# Data files with sensitive voter information
-# This prevents raw voter lists from being pushed to GitHub.
-*.xlsx
-*.csv
-*.parquet
-
