@@ -1,0 +1,36 @@
+# Python cache and build files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Streamlit cache/config
+.streamlit/
+
+# IDE / editor config
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cursor / local tooling
+.cursor/
+terminals/
+
+# Data files with sensitive voter information
+# This prevents raw voter lists from being pushed to GitHub.
+*.xlsx
+*.csv
+*.parquet
+
