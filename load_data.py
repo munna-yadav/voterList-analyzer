@@ -5,18 +5,23 @@ import pandas as pd
 
 
 # Default base directory for voter Excel files.
+# Priority:
 # 1. If VOTER_DATA_DIR env var is set, use that.
 # 2. Else, if your local absolute path exists, use it (local-only).
-# 3. Else, fall back to a `data/` folder inside this repo (for Streamlit Cloud).
+# 3. Else, if a `data/` folder exists in the repo, use that (for hosted/sample data).
+# 4. Else, fall back to the repo root (municipality folders directly in repo).
 _DEFAULT_LOCAL_DIR = "/home/munna/Downloads/Matdata Namawali"
 _REPO_ROOT = os.path.dirname(__file__)
 
-BASE_DIR = os.getenv(
-    "VOTER_DATA_DIR",
-    _DEFAULT_LOCAL_DIR
-    if os.path.isdir(_DEFAULT_LOCAL_DIR)
-    else os.path.join(_REPO_ROOT, "data"),
-)
+_env_dir = os.getenv("VOTER_DATA_DIR")
+if _env_dir:
+    BASE_DIR = _env_dir
+elif os.path.isdir(_DEFAULT_LOCAL_DIR):
+    BASE_DIR = _DEFAULT_LOCAL_DIR
+elif os.path.isdir(os.path.join(_REPO_ROOT, "data")):
+    BASE_DIR = os.path.join(_REPO_ROOT, "data")
+else:
+    BASE_DIR = _REPO_ROOT
 
 
 # Default mapping based on observed Nepali headers in the Excel files.
