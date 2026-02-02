@@ -4,7 +4,19 @@ from typing import Dict, List, Optional, Tuple
 import pandas as pd
 
 
-BASE_DIR = "/home/munna/Downloads/Matdata Namawali"
+# Default base directory for voter Excel files.
+# 1. If VOTER_DATA_DIR env var is set, use that.
+# 2. Else, if your local absolute path exists, use it (local-only).
+# 3. Else, fall back to a `data/` folder inside this repo (for Streamlit Cloud).
+_DEFAULT_LOCAL_DIR = "/home/munna/Downloads/Matdata Namawali"
+_REPO_ROOT = os.path.dirname(__file__)
+
+BASE_DIR = os.getenv(
+    "VOTER_DATA_DIR",
+    _DEFAULT_LOCAL_DIR
+    if os.path.isdir(_DEFAULT_LOCAL_DIR)
+    else os.path.join(_REPO_ROOT, "data"),
+)
 
 
 # Default mapping based on observed Nepali headers in the Excel files.
