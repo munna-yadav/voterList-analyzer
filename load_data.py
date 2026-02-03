@@ -211,17 +211,24 @@ def add_derived_fields(df: pd.DataFrame) -> pd.DataFrame:
 
     # Normalize gender if present in a few common English/Nepali forms
     if "gender" in result.columns:
-        g = result["gender"].astype(str).str.lower()
-        result["gender_norm"] = g.replace(
-            {
-                "m": "Male",
-                "male": "Male",
-                "f": "Female",
-                "female": "Female",
-                "पुरुष": "Male",
-                "महिला": "Female",
-            }
-        )
+        import re
+        # Clean gender values: strip whitespace and remove HTML comments/tags
+        g = result["gender"].astype(str).str.strip()
+        # Remove HTML comments like <!-- td-->
+        g_clean = g.str.replace(r"<!--.*?-->", "", regex=True).str.strip()
+        
+        result["gender_norm"] = g_clean.copy()
+        
+        # Map Nepali values directly (exact match, case-sensitive for Nepali)
+        result["gender_norm"] = result["gender_norm"].replace({
+            "पुरुष": "Male",
+            "महिला": "Female",
+        })
+        
+        # Map English variations (case-insensitive)
+        g_lower = result["gender_norm"].str.lower()
+        result.loc[g_lower.isin(["m", "male"]), "gender_norm"] = "Male"
+        result.loc[g_lower.isin(["f", "female"]), "gender_norm"] = "Female"
 
     # Simple age banding if age column exists and is numeric-like
     if "age" in result.columns:
